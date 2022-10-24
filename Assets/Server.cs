@@ -59,7 +59,7 @@ public class Server : NetworkManager
     [MessageHandler((ushort)ClientToServerId.connectData)]
     public static void ReciveConnectData(ushort fromPlayer, Message message)
     {
-
+        GameController.Singleton.StartNewGame();   
     }
     [MessageHandler((ushort)ClientToServerId.input)]
     public static void ReciveInput(ushort fromPlayer, Message message)
