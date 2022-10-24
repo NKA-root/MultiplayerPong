@@ -18,6 +18,10 @@ public class Server : NetworkManager
 
     public bool isGameInLobby { get; private set; } = true;
 
+    Rigidbody2D Ball => GameObject.FindGameObjectWithTag("Ball").GetComponent<Rigidbody2D>();
+    Rigidbody2D ServerPlayer => GameObject.Find("Player").GetComponent<Rigidbody2D>();
+    Rigidbody2D ExternalPlayer => GameObject.Find("Opponent").GetComponent<Rigidbody2D>();
+
 
     private void Awake()
     {
@@ -41,8 +45,8 @@ public class Server : NetworkManager
 
     void PlayerLeft(object sender, ServerDisconnectedEventArgs e)
     {
-
-    }
+        GameController.Singleton.PlayerLeft();
+    }  
     private void FixedUpdate()
     {
         server.Update();
@@ -76,4 +80,32 @@ public class Server : NetworkManager
 
         Singleton.server.Send(backMessage, fromPlayer);
     }
+
+    public static void SendBallPosition(Vector2 position)
+    {
+        Message message = Message.Create(MessageSendMode.Unreliable, ServerToClientId.ballPosition);
+
+        message.AddVector2(position);
+
+        Singleton.server.SendToAll(message);
+    }
+    public static void SendBallData(ushort touches, Vector2 velocity)
+    {
+        Message message = Message.Create(MessageSendMode.Unreliable, ServerToClientId.ballData);
+
+        message.AddUShort(touches);
+        message.AddVector2(velocity);
+
+        Singleton.server.SendToAll(message);
+    }
+    public static void SendPlayerPosition(bool isPlayerOnRightSide, float posY)
+    {
+        Message message = Message.Create(MessageSendMode.Unreliable, ServerToClientId.playerPositions);
+
+        message.AddBool(isPlayerOnRightSide);
+        message.AddFloat(posY);
+
+        Singleton.server.SendToAll(message);
+    }
+    public static void SendStartGameInfo() => Singleton.server.SendToAll(Message.Create(MessageSendMode.Reliable, ServerToClientId.gameStart));
 }

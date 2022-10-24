@@ -31,6 +31,7 @@ public class NetworkManager : MonoBehaviour
     {
         gameStart,
         ballData,
+        ballPosition,
         playerPositions,
         pingBack
     }

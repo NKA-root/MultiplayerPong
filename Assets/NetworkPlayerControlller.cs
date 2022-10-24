@@ -68,4 +68,8 @@ public class NetworkPlayerControlller : MonoBehaviour
 
         Rigidbody.position = new Vector2(Rigidbody.position.x, Rigidbody.position.y + positionY);
     }
+    public void SetPlayerColorAlpha(float alpha = 1f)
+    {
+        GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, alpha);
+    }
 }

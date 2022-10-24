@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
+using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
 {
@@ -68,19 +69,29 @@ public class GameController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (isGamePlaying || true)
+        if (isGamePlaying)
         {
             UpdateBallMovement();
             CheckForPoint();
             CheckBallVelocity();
+
+            if (!NetworkManager.isClient && NetworkManager.Singleton.CurrentTick % 5 == 0) Server.SendBallPosition(Ball.position);
         }
     }
     public void StartNewGame()
     {
+        isGamePlaying = true;
         ScoreLeft = 0;
         ScoreRight = 0;
+        FindObjectOfType<NetworkPlayerControlller>().SetPlayerColorAlpha();
         NewPoint();
     }
+    public void PlayerLeft()
+    {
+        isGamePlaying = false;
+        FindObjectOfType<NetworkPlayerControlller>().SetPlayerColorAlpha(.2f);
+    }
+
     public void NewPoint()
     {
         BallTouches = 0;
@@ -117,6 +128,7 @@ public class GameController : MonoBehaviour
     void SetBallRandomSpeed()
     {
         Ball.velocity = GetRandomVector() * BallSpeeed;
+        if (!NetworkManager.isClient) Server.SendBallData(BallTouches, Ball.velocity);
     }
     Vector2 GetRandomVector()
     {
@@ -144,11 +156,17 @@ public class GameController : MonoBehaviour
             NewPoint();
         }
     }
-    public void RandomizeBallVelocity() => Ball.velocity = new Vector2(BallVelocity.x * Random.Range(.7f, 1.3f), BallVelocity.y * Random.Range(.7f, 1.3f)).normalized * BallSpeeed;
+    public void RandomizeBallVelocity()
+    {
+        Ball.velocity = new Vector2(BallVelocity.x * Random.Range(.7f, 1.3f), BallVelocity.y * Random.Range(.7f, 1.3f)).normalized * BallSpeeed;
+        if (!NetworkManager.isClient) Server.SendBallData(BallTouches, Ball.velocity);
+    }
 
     void CheckBallVelocity()
     {
         Vector2 value = BallVelocity;
+
+        if (!(Mathf.Abs(value.x) < .3f || Mathf.Abs(value.y) < .3f)) return;
 
         while (Mathf.Abs(value.x) < .3f || Mathf.Abs(value.y) < .3f)
         {
@@ -156,5 +174,6 @@ public class GameController : MonoBehaviour
         }
 
         Ball.velocity = value.normalized * BallSpeeed;
+        if (!NetworkManager.isClient) Server.SendBallData(BallTouches, Ball.velocity);
     }
 }
