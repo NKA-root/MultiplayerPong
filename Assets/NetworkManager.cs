@@ -20,6 +20,9 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
+    public ushort CurrentTick { get; protected set; }
+
+
     private void Awake()
     {
         Singleton = this;
@@ -67,4 +70,5 @@ public class NetworkManager : MonoBehaviour
 
         server.server.SendToAll(message);
     }
+
 }

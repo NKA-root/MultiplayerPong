@@ -233,6 +233,7 @@ public class Menu : MonoBehaviour
                     if (!FindObjectOfType<NetworkManager>().IsUnityNull()) return;
 
                     Client client = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity).AddComponent<Client>();
+                    client.name = "Client";
                     client.Connect();
                     break;
             }
@@ -246,6 +247,7 @@ public class Menu : MonoBehaviour
                     if (!FindObjectOfType<NetworkManager>().IsUnityNull()) return;
 
                     Server server = Instantiate(new GameObject(), Vector2.zero, Quaternion.identity).AddComponent<Server>();
+                    server.name = "Server";
                     DontDestroyOnLoad(server);
                     SceneManager.LoadScene(2);
                     break;

@@ -13,9 +13,8 @@ public class Server : NetworkManager
     public Riptide.Server server { get; private set; }
 
     public ushort port => 7777;
-    public ushort maxClientsConnected => 2;
+    public ushort maxClientsConnected => 1;
     public string ip { get; set; }
-    public ushort CurrentTick { get; private set; }
 
     public bool isGameInLobby { get; private set; } = true;
 
@@ -57,4 +56,24 @@ public class Server : NetworkManager
         server.Stop();
     }
 
+    [MessageHandler((ushort)ClientToServerId.connectData)]
+    public static void ReciveConnectData(ushort fromPlayer, Message message)
+    {
+
+    }
+    [MessageHandler((ushort)ClientToServerId.input)]
+    public static void ReciveInput(ushort fromPlayer, Message message)
+    {
+        if(NetworkPlayerControlller.list.TryGetValue(fromPlayer, out NetworkPlayerControlller player));
+            player.SetInput(message.GetBool(),message.GetBool());
+    }
+    [MessageHandler((ushort)ClientToServerId.pingData)]
+    public static void RecivePing(ushort fromPlayer, Message message)
+    {
+        Message backMessage = Message.Create(MessageSendMode.Unreliable, ServerToClientId.pingBack);
+
+        backMessage.AddUShort(Singleton.CurrentTick);
+
+        Singleton.server.Send(backMessage, fromPlayer);
+    }
 }

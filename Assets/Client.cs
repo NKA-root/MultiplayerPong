@@ -17,7 +17,6 @@ public class Client : NetworkManager
 
     ushort port => 7777;
     string ip => PlayerPrefs.GetString("IP");
-    public ushort CurrentTick { get; private set; }
     public ushort TickDivergenceTolerance { get; private set; } = 1;
     public bool isTryingToConnect { get; private set; } = false;
     public ushort TickPing { get; private set; } = 0;
@@ -65,7 +64,7 @@ public class Client : NetworkManager
     }
     void DidConnect(object sender, EventArgs e)
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+        SceneManager.LoadScene(1);
     }
     void FailedToConnect(object sender, EventArgs e)
     {
