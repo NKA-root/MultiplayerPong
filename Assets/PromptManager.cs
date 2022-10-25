@@ -53,7 +53,8 @@ public class PromptManager : MonoBehaviour
     }  
     public void LeaveScene()
     {
-        Destroy(GameObject.FindObjectOfType<NetworkManager>().gameObject);
+        if(GameObject.FindObjectOfType<NetworkManager>())
+            Destroy(GameObject.FindObjectOfType<NetworkManager>().gameObject);
 
         SceneManager.LoadScene(0);
     }

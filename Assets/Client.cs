@@ -85,4 +85,38 @@ public class Client : NetworkManager
         SceneManager.LoadScene(0);
         Destroy(this.gameObject);
     }
+
+    public static void SendInputs(bool inputW, bool inputS)
+    {
+        Message message = Message.Create(MessageSendMode.Unreliable, ClientToServerId.input);
+
+        message.AddBool(inputW);
+        message.AddBool(inputS);
+
+        SendMessages(message);
+    }
+
+    [MessageHandler((ushort)ServerToClientId.ballData)]
+    public static void SetBallData(Message message)
+    {
+
+    }
+    [MessageHandler((ushort)ServerToClientId.ballPosition)]
+    public static void SetBallPosition(Message message)
+    {
+
+    }
+    [MessageHandler((ushort)ServerToClientId.playerPositions)]
+    public static void SetPlayerPosition(Message message)
+    {
+
+    }
+    [MessageHandler((ushort)ServerToClientId.gameStart)]
+    public static void SetGameStart(Message message)
+    {
+
+    }
+
+    public static void SendGameConnectedData() => SendMessages(Message.Create(MessageSendMode.Reliable, ClientToServerId.connectData));
+
 }

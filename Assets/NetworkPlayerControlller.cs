@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class NetworkPlayerControlller : MonoBehaviour
 {
-    public static Dictionary<ushort, NetworkPlayerControlller> list = new();
+    public static Dictionary<ushort, NetworkPlayerControlller> list { get; set; } = new();
 
     [SerializeField] bool isLocal;
     Rigidbody2D Rigidbody;
 
-    public ushort playerId { get; set; }
-    [SerializeField] ushort PlayerID;
+    public ushort playerId;
 
     private void Awake()
     {
         Rigidbody = this.GetComponent<Rigidbody2D>();
-        playerId = PlayerID;
-
+        list = new();
+    }
+    private void Start()
+    {
         list.Add(playerId, this);
     }
 
@@ -28,7 +29,11 @@ public class NetworkPlayerControlller : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        MovePlayer(CalculateMovement(Inputs));   
+        MovePlayer(CalculateMovement(Inputs));
+
+        if(NetworkManager.isClient) Client.SendInputs(Inputs[0], Inputs[1]);
+
+        Inputs[0] = false; Inputs[1] = false;
     }
     float CalculateMovement(bool[] Inputs)
     {
@@ -67,6 +72,8 @@ public class NetworkPlayerControlller : MonoBehaviour
         }
 
         Rigidbody.position = new Vector2(Rigidbody.position.x, Rigidbody.position.y + positionY);
+
+        if(NetworkManager.isServer) Server.SendPlayerPosition(Rigidbody.position.x > 0, Rigidbody.position.y);
     }
     public void SetPlayerColorAlpha(float alpha = 1f)
     {

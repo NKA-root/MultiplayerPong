@@ -169,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LeaveGamePrompt: {fileID: 9205381279797921359}
   Ball: {fileID: 1673168366}
+  WaitingText: {fileID: 1794485635}
   LeftScoreText: {fileID: 1285919459}
   RightScoreText: {fileID: 647659616}
   isGamePlaying: 0
@@ -256,7 +257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isLocal: 0
-  PlayerID: 0
+  playerId: 0
 --- !u!1 &647659614
 GameObject:
   m_ObjectHideFlags: 0

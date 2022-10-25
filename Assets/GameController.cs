@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
@@ -15,6 +16,7 @@ public class GameController : MonoBehaviour
 
     [SerializeField] Rigidbody2D Ball;
 
+    [SerializeField] TextMeshProUGUI WaitingText;
     [SerializeField] TextMeshProUGUI LeftScoreText;
     [SerializeField] TextMeshProUGUI RightScoreText;
 
@@ -56,6 +58,7 @@ public class GameController : MonoBehaviour
         Singleton = this;
 
         if (!Ball) Ball = GameObject.FindWithTag("Ball").GetComponent<Rigidbody2D>();
+        if (NetworkManager.isClient) Client.SendGameConnectedData();
     }
     private void Update()
     {
@@ -75,11 +78,12 @@ public class GameController : MonoBehaviour
             CheckForPoint();
             CheckBallVelocity();
 
-            if (!NetworkManager.isClient && NetworkManager.Singleton.CurrentTick % 5 == 0) Server.SendBallPosition(Ball.position);
+            if (NetworkManager.isServer && NetworkManager.Singleton.CurrentTick % 5 == 0) Server.SendBallPosition(Ball.position);
         }
     }
     public void StartNewGame()
     {
+        if (WaitingText) WaitingText.gameObject.SetActive(false);
         isGamePlaying = true;
         ScoreLeft = 0;
         ScoreRight = 0;
@@ -128,7 +132,7 @@ public class GameController : MonoBehaviour
     void SetBallRandomSpeed()
     {
         Ball.velocity = GetRandomVector() * BallSpeeed;
-        if (!NetworkManager.isClient) Server.SendBallData(BallTouches, Ball.velocity);
+        if (NetworkManager.isServer) Server.SendBallData(BallTouches, Ball.velocity);
     }
     Vector2 GetRandomVector()
     {
@@ -159,7 +163,7 @@ public class GameController : MonoBehaviour
     public void RandomizeBallVelocity()
     {
         Ball.velocity = new Vector2(BallVelocity.x * Random.Range(.7f, 1.3f), BallVelocity.y * Random.Range(.7f, 1.3f)).normalized * BallSpeeed;
-        if (!NetworkManager.isClient) Server.SendBallData(BallTouches, Ball.velocity);
+        if (NetworkManager.isServer) Server.SendBallData(BallTouches, Ball.velocity);
     }
 
     void CheckBallVelocity()
@@ -174,6 +178,6 @@ public class GameController : MonoBehaviour
         }
 
         Ball.velocity = value.normalized * BallSpeeed;
-        if (!NetworkManager.isClient) Server.SendBallData(BallTouches, Ball.velocity);
+        if (NetworkManager.isServer) Server.SendBallData(BallTouches, Ball.velocity);
     }
 }

@@ -42,6 +42,7 @@ public class NetworkManager : MonoBehaviour
         pingData
     }
     public static bool isClient => GetNetworkManager() is Client;
+    public static bool isServer => GetNetworkManager() is Server;
     public static NetworkManager GetNetworkManager()
     {
         return FindObjectOfType<NetworkManager>();
