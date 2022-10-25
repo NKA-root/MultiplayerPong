@@ -33,6 +33,42 @@ public class PlayerController : MonoBehaviour
     {
         Tick++;
 
+        if(NetworkManager.isClient) StartCoroutine(PingedFixedUpdate());
+        else
+        {
+            if (Inputs[0] && Inputs[1]) Inputs.ToList().ForEach(x => x = false);
+
+            short moveY = 0;
+
+            if (Inputs[0]) moveY += 1;
+            else if (Inputs[1]) moveY -= 1;
+
+            rigidbody.position += new Vector2(0, (float)moveY * Time.deltaTime * playerSpeed);
+
+            if (Mathf.Abs(rigidbody.position.y) > 10f)
+            {
+                rigidbody.position = new Vector2(rigidbody.position.x, rigidbody.position.y > 0 ? 10 : -10);
+            }
+
+            SendInputs(Inputs);
+
+            LastInputs = Inputs;
+
+            for (int i = 0; i < Inputs.Length; i++)
+            {
+                Inputs[i] = false;
+            }
+
+            if (NetworkManager.isServer) Server.SendPlayerPosition(rigidbody.position.x > 0, rigidbody.position.y);
+        }
+    }
+    IEnumerator PingedFixedUpdate()
+    {
+        for (int i = 0; i < Client.Singleton.TickPing; i++)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+
         if (Inputs[0] && Inputs[1]) Inputs.ToList().ForEach(x => x = false);
 
         short moveY = 0;
@@ -47,10 +83,7 @@ public class PlayerController : MonoBehaviour
             rigidbody.position = new Vector2(rigidbody.position.x, rigidbody.position.y > 0 ? 10 : -10);
         }
 
-        if ((Inputs == LastInputs && Tick % 5 == 0) || Inputs != LastInputs)
-        {
-            SendInputs(Inputs);
-        }
+        SendInputs(Inputs);
 
         LastInputs = Inputs;
 
@@ -58,6 +91,8 @@ public class PlayerController : MonoBehaviour
         {
             Inputs[i] = false;
         }
+
+        yield return null;
 
         if (NetworkManager.isServer) Server.SendPlayerPosition(rigidbody.position.x > 0, rigidbody.position.y);
     }

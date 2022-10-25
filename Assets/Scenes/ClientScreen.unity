@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LeaveGamePrompt: {fileID: 1213316406}
-  Ball: {fileID: 0}
+  Ball: {fileID: 973297516}
   WaitingText: {fileID: 0}
   LeftScoreText: {fileID: 0}
   RightScoreText: {fileID: 0}
@@ -257,6 +257,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &973297516 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 2738896839487811938, guid: a7f2cc6da5fe404488fb5c5f24afc89f, type: 3}
+  m_PrefabInstance: {fileID: 1070739077}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1070739077
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -678,7 +683,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isLocal: 0
-  playerId: 1
+  Rigidbody: {fileID: 0}
+  playerId: 0
 --- !u!1001 &2130764066
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -754,4 +760,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isLocal: 1
-  playerId: 0
+  Rigidbody: {fileID: 0}
+  playerId: 1

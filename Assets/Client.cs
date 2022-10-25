@@ -41,8 +41,10 @@ public class Client : NetworkManager
         client.Update();
 
         CurrentTick++;
+
+        if (CurrentTick % 50 == 0) PingServer();
         //if (CurrentTick % 250 == 0 || lagCall % 25 == 0 || (CurrentTick % 50 == 0 && SceneManager.GetActiveScene().name.Contains("Lobby"))) PingServer();
-        Debug.Log("TickPing: " + TickPing);
+        //Debug.Log("TickPing: " + TickPing);
     }
     public void Connect()
     {
@@ -64,7 +66,8 @@ public class Client : NetworkManager
     }
     void DidConnect(object sender, EventArgs e)
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(1); 
+        PingServer();
     }
     void FailedToConnect(object sender, EventArgs e)
     {
@@ -123,4 +126,20 @@ public class Client : NetworkManager
 
     public static void SendGameConnectedData() => SendMessages(Message.Create(MessageSendMode.Reliable, ClientToServerId.connectData));
 
+
+    [MessageHandler((ushort)ServerToClientId.pingBack)]
+    public static void CalculatePing(Message message)
+    {
+        ushort ping = (ushort)(Singleton.CurrentTick - message.GetUShort());
+        Debug.Log("Ping: " + ping);
+
+        Singleton.TickPing = ping;
+    }
+
+    public void PingServer()
+    {
+        Message message = Message.Create(MessageSendMode.Unreliable, ClientToServerId.pingData);
+
+        SendMessages(message);
+    }
 }

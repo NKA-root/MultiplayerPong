@@ -74,6 +74,12 @@ public class GameController : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if (NetworkManager.isClient)
+        {
+            StartCoroutine(PingedFixedUpdate());
+            return;
+        }
+
         if (isGamePlaying)
         {
             UpdateBallMovement();
@@ -82,6 +88,22 @@ public class GameController : MonoBehaviour
 
             if (NetworkManager.isServer && NetworkManager.Singleton.CurrentTick % 5 == 0) Server.SendBallPosition(Ball.position);
         }
+    }
+    IEnumerator PingedFixedUpdate()
+    {
+        for (int i = 0; i < Client.Singleton.TickPing; i++)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+
+        if (isGamePlaying)
+        {
+            UpdateBallMovement();
+            CheckForPoint();
+            CheckBallVelocity();
+        }
+
+        yield return null;
     }
     public void StartNewGame()
     {
@@ -174,7 +196,7 @@ public class GameController : MonoBehaviour
 
         if (!(Mathf.Abs(value.x) < .3f || Mathf.Abs(value.y) < .3f)) return;
 
-        while (Mathf.Abs(value.x) < .3f || Mathf.Abs(value.y) < .3f)
+        while ((Mathf.Abs(value.x) < .3f || Mathf.Abs(value.y) < .3f) && BallVelocity.x * value.x < 0)
         {
             value = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
         }
