@@ -16,6 +16,8 @@ public class GameController : MonoBehaviour
 
     [SerializeField] Rigidbody2D Ball;
 
+    public Rigidbody2D GameBall => Ball;
+
     [SerializeField] TextMeshProUGUI WaitingText;
     [SerializeField] TextMeshProUGUI LeftScoreText;
     [SerializeField] TextMeshProUGUI RightScoreText;
@@ -23,7 +25,7 @@ public class GameController : MonoBehaviour
     public bool isGamePlaying = false;
 
     Vector2 BallVelocity => Ball.velocity;
-    float BallSpeeed => BaseBallSpeed * (1 + ((float)BallTouches/10));
+    float BallSpeeed => BaseBallSpeed * (1 + ((float)BallTouches / 10));
     float BaseBallSpeed = 2f;
 
     public ushort BallTouches { get; set; } = 0;
@@ -36,7 +38,7 @@ public class GameController : MonoBehaviour
         {
             _scoreLeft = value;
 
-            if(LeftScoreText) LeftScoreText.text = value.ToString();
+            if (LeftScoreText) LeftScoreText.text = value.ToString();
         }
     }
 
@@ -48,7 +50,7 @@ public class GameController : MonoBehaviour
         {
             _scoreRight = value;
 
-            if(RightScoreText) RightScoreText.text = value.ToString();
+            if (RightScoreText) RightScoreText.text = value.ToString();
         }
     }
 

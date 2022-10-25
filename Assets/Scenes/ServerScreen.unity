@@ -257,7 +257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isLocal: 0
-  playerId: 0
+  playerId: 1
 --- !u!1 &647659614
 GameObject:
   m_ObjectHideFlags: 0

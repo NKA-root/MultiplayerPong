@@ -58,10 +58,15 @@ public class PlayerController : MonoBehaviour
         {
             Inputs[i] = false;
         }
+
+        if (NetworkManager.isServer) Server.SendPlayerPosition(rigidbody.position.x > 0, rigidbody.position.y);
     }
     void SendInputs(bool[] inputs)
     {
+        if (!NetworkManager.isClient) return;
+
         Message message = Message.Create(MessageSendMode.Unreliable, ClientToServerId.input);
+
         message.AddBool(inputs[0]);
         message.AddBool(inputs[1]);
 

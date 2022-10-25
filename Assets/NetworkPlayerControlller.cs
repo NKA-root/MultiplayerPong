@@ -7,12 +7,16 @@ public class NetworkPlayerControlller : MonoBehaviour
     public static Dictionary<ushort, NetworkPlayerControlller> list { get; set; } = new();
 
     [SerializeField] bool isLocal;
-    Rigidbody2D Rigidbody;
+
+    public Rigidbody2D Rigidbody;
 
     public ushort playerId;
 
     private void Awake()
     {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 100;
+
         Rigidbody = this.GetComponent<Rigidbody2D>();
         list = new();
     }
@@ -29,9 +33,9 @@ public class NetworkPlayerControlller : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        MovePlayer(CalculateMovement(Inputs));
+        if (NetworkManager.isServer) MovePlayer(CalculateMovement(Inputs));
 
-        if(NetworkManager.isClient) Client.SendInputs(Inputs[0], Inputs[1]);
+        if (NetworkManager.isClient) Client.SendInputs(Inputs[0], Inputs[1]);
 
         Inputs[0] = false; Inputs[1] = false;
     }
@@ -73,7 +77,7 @@ public class NetworkPlayerControlller : MonoBehaviour
 
         Rigidbody.position = new Vector2(Rigidbody.position.x, Rigidbody.position.y + positionY);
 
-        if(NetworkManager.isServer) Server.SendPlayerPosition(Rigidbody.position.x > 0, Rigidbody.position.y);
+        if (NetworkManager.isServer) Server.SendPlayerPosition(Rigidbody.position.x > 0, Rigidbody.position.y);
     }
     public void SetPlayerColorAlpha(float alpha = 1f)
     {

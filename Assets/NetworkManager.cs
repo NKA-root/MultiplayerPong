@@ -5,28 +5,9 @@ using UnityEngine;
 
 public class NetworkManager : MonoBehaviour
 {
-    static NetworkManager _singleton;
-    public static NetworkManager Singleton
-    {
-        get => _singleton;
-        set
-        {
-            if (Singleton != null)
-            {
-                Debug.LogError("Singleton of Network Manager already exist");
-                Destroy(value.gameObject);
-            }
-            _singleton = value;
-        }
-    }
-
+    public static NetworkManager Singleton => GetNetworkManager();
     public ushort CurrentTick { get; protected set; }
 
-
-    private void Awake()
-    {
-        Singleton = this;
-    }
     public enum ServerToClientId : ushort
     {
         gameStart,
@@ -49,17 +30,21 @@ public class NetworkManager : MonoBehaviour
     }
     public static void SendMessages(Message message, ushort toId = 0)
     {
-        if (Singleton == null) return;
+        Debug.Log("Trying to Send...");
 
-        if (Singleton is Client)
+        Debug.Log("Sending");
+
+        if (isClient)
         {
             Client client = Singleton as Client;
 
             client.client.Send(message);
         }
-        else
+        else if (isServer)
         {
             Server server = Singleton as Server;
+
+            Debug.Log("Sending as Server");
 
             server.server.Send(message, toId);
         }

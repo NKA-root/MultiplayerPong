@@ -69,8 +69,12 @@ public class Server : NetworkManager
     [MessageHandler((ushort)ClientToServerId.input)]
     public static void ReciveInput(ushort fromPlayer, Message message)
     {
-        if(NetworkPlayerControlller.list.TryGetValue(fromPlayer, out NetworkPlayerControlller player));
+        if (NetworkPlayerControlller.list.TryGetValue(fromPlayer, out NetworkPlayerControlller player))
+        {
+            Debug.Log("Recived Input");
+
             player.SetInput(message.GetBool(),message.GetBool());
+        }
     }
     [MessageHandler((ushort)ClientToServerId.pingData)]
     public static void RecivePing(ushort fromPlayer, Message message)

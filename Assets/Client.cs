@@ -99,22 +99,26 @@ public class Client : NetworkManager
     [MessageHandler((ushort)ServerToClientId.ballData)]
     public static void SetBallData(Message message)
     {
-
+        GameController.Singleton.BallTouches = message.GetUShort();
+        GameController.Singleton.GameBall.velocity = message.GetVector2();
     }
     [MessageHandler((ushort)ServerToClientId.ballPosition)]
     public static void SetBallPosition(Message message)
     {
-
+        GameController.Singleton.GameBall.position = message.GetVector2();
     }
     [MessageHandler((ushort)ServerToClientId.playerPositions)]
     public static void SetPlayerPosition(Message message)
     {
-
+        if (NetworkPlayerControlller.list.TryGetValue((ushort)(message.GetBool() ? 1 : 0), out NetworkPlayerControlller player))
+        {
+            player.Rigidbody.position = new Vector2(player.Rigidbody.position.x, message.GetFloat());
+        }
     }
     [MessageHandler((ushort)ServerToClientId.gameStart)]
     public static void SetGameStart(Message message)
     {
-
+        GameController.Singleton.isGamePlaying = true;
     }
 
     public static void SendGameConnectedData() => SendMessages(Message.Create(MessageSendMode.Reliable, ClientToServerId.connectData));
