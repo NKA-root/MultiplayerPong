@@ -683,8 +683,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isLocal: 0
-  Rigidbody: {fileID: 0}
+  Rigidbody: {fileID: 1774157168}
   playerId: 0
+--- !u!50 &1774157168 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 6222838348086311076, guid: ef9ee7007ad52844fadc11e3e18e01a1, type: 3}
+  m_PrefabInstance: {fileID: 1774157165}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2130764066
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -760,5 +765,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isLocal: 1
-  Rigidbody: {fileID: 0}
+  Rigidbody: {fileID: 2130764070}
   playerId: 1
+--- !u!50 &2130764070 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 6222838348086311076, guid: ef9ee7007ad52844fadc11e3e18e01a1, type: 3}
+  m_PrefabInstance: {fileID: 2130764066}
+  m_PrefabAsset: {fileID: 0}

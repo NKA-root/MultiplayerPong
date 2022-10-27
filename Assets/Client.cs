@@ -115,7 +115,7 @@ public class Client : NetworkManager
     {
         if (NetworkPlayerControlller.list.TryGetValue((ushort)(message.GetBool() ? 1 : 0), out NetworkPlayerControlller player))
         {
-            player.Rigidbody.position = new Vector2(player.Rigidbody.position.x, message.GetFloat());
+            if(player.Rigidbody) player.Rigidbody.position = new Vector2(player.Rigidbody.position.x, message.GetFloat());
         }
     }
     [MessageHandler((ushort)ServerToClientId.gameStart)]
