@@ -230,11 +230,7 @@ public class Menu : MonoBehaviour
                 case 0: Escape(false); break;
                 case -1: ipField.ActivateInputField(); break;
                 case -2:
-                    if (!FindObjectOfType<NetworkManager>().IsUnityNull()) return;
-
-                    Client client = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity).AddComponent<Client>();
-                    client.name = "Client";
-                    client.Connect();
+                    ConnectClient();
                     break;
             }
         }
@@ -244,15 +240,18 @@ public class Menu : MonoBehaviour
             {
                 case 0: Escape(false); break;
                 case -1:
-                    if (!FindObjectOfType<NetworkManager>().IsUnityNull()) return;
-
-                    Server server = Instantiate(new GameObject(), Vector2.zero, Quaternion.identity).AddComponent<Server>();
-                    server.name = "Server";
-                    DontDestroyOnLoad(server);
-                    SceneManager.LoadScene(2);
+                    TryToRunHost();
                     break;
             }
         }
+    }
+    public void MenuToHost()
+    {
+        ExitMainMenu(); EnterHostMode();
+    }
+    public void MenuToClient()
+    {
+        ExitMainMenu(); EnterClientMode();
     }
     public void Escape(bool isFromKeyboard = true)
     {
@@ -268,6 +267,23 @@ public class Menu : MonoBehaviour
             ExitHostMode();
             EnterMainMenu();
         }
+    }
+    public void ConnectClient()
+    {
+        if (!FindObjectOfType<NetworkManager>().IsUnityNull()) return;
+
+        Client client = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity).AddComponent<Client>();
+        client.name = "Client";
+        client.Connect();
+    }
+    public void TryToRunHost()
+    {
+        if (!FindObjectOfType<NetworkManager>().IsUnityNull()) return;
+
+        Server server = Instantiate(new GameObject(), Vector2.zero, Quaternion.identity).AddComponent<Server>();
+        server.name = "Server";
+        DontDestroyOnLoad(server);
+        SceneManager.LoadScene(2);
     }
 
     #endregion

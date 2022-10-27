@@ -130,7 +130,12 @@ public class Client : NetworkManager
     [MessageHandler((ushort)ServerToClientId.pingBack)]
     public static void CalculatePing(Message message)
     {
-        ushort ping = (ushort)(Singleton.CurrentTick - message.GetUShort());
+        ushort currentTick = message.GetUShort();
+
+        ushort ping = (ushort)(Singleton.CurrentTick - currentTick);
+
+        Singleton.CurrentTick = currentTick;
+
         Debug.Log("Ping: " + ping);
 
         Singleton.TickPing = ping;

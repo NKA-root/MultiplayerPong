@@ -51,20 +51,7 @@ public class NetworkPlayerControlller : MonoBehaviour
 
         MovementValue = (float)moveY * Time.deltaTime * playerSpeed;
 
-        if (Rigidbody.position.y > 0)
-        {
-            if (Rigidbody.position.y + MovementValue > 10f)
-            {
-                MovementValue = 10f - Rigidbody.position.y;
-            }
-        }
-        else
-        {
-            if (Rigidbody.position.y + MovementValue < -10f)
-            {
-                MovementValue = -10f + Rigidbody.position.y;
-            }
-        }
+        if (Mathf.Abs(Rigidbody.position.y + MovementValue) > 10f) MovementValue = (10f - Mathf.Abs(Rigidbody.position.y)) * Rigidbody.position.y > 0 ? 1 : -1;
 
         return MovementValue;
     }
