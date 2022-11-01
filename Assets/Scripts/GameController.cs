@@ -26,7 +26,7 @@ public class GameController : MonoBehaviour
 
     Vector2 BallVelocity => Ball.velocity;
     float BallSpeeed => BaseBallSpeed * (1 + ((float)BallTouches / 10));
-    float BaseBallSpeed = 2f;
+    float BaseBallSpeed = 8f;
 
     public ushort BallTouches { get; set; } = 0;
 
@@ -151,7 +151,7 @@ public class GameController : MonoBehaviour
             }
         }
 
-        Ball.position += BallMovement;
+        //Ball.position += BallMovement;
     }
     void SetBallRandomSpeed()
     {
